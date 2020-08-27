@@ -9,9 +9,9 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>xmd-shop-basics</module>
-        <module>xmd-shop-commoms</module>
         <module>xmd-shop-service</module>
         <module>xmd-shop-service-api</module>
+        <module>xmd-shop-commons</module>
     </modules>
 
     <!--父级项目不需要打包所有packging的类型为pom-->
