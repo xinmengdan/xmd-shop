@@ -12,17 +12,23 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @Api(value = "品牌接口")
 public interface BrandService {
 
-    @ApiOperation(value = "查询商品品牌信息")
+    @ApiOperation(value = "查询品牌信息")
     @GetMapping(value = "brand/list")
     public Result<PageInfo<BrandEntity>> getBrandInfo(BrandDTO brandDTO);
 
-    @ApiModelProperty(value = "查询商品品牌信息")
+    @ApiModelProperty(value = "新增品牌信息")
     @PostMapping(value = "brand/save")
     public Result<JsonObject> save(@Validated({MrOperation.Add.class}) @RequestBody BrandDTO brandDTO);
+
+    @ApiModelProperty(value = "修改品牌信息")
+    @PutMapping(value = "brand/save")
+    public Result<JsonObject> editBrand(@Validated({MrOperation.Update.class}) @RequestBody BrandDTO brandDTO);
+
 
 }

@@ -41,18 +41,22 @@ public class BrandServiceImpl extends BaseApiService implements BrandService {
     @Resource
     private CategoryBrandMapper categoryBrandMapper;
 
+    //查询 (获取品牌信息)
     @Override
     public Result<PageInfo<BrandEntity>> getBrandInfo(BrandDTO brandDTO) {
 
+          //   代码优化前
 //        PageHelper.startPage(page,rows);//分页
 //
 //        //排序
 //        Example example = new Example(BrandEntity.class);
+
+          //条件查询
 //        if(ObjectUtil.isNotNull(sort)){
 //            example.setOrderByClause(sort + " " + (desc? "desc":""));
 //        }
 
-        //分页
+        //分页   代码优化后
         PageHelper.startPage(brandDTO.getPage(),brandDTO.getRows());
 
         //排序 条件查询
@@ -79,7 +83,32 @@ public class BrandServiceImpl extends BaseApiService implements BrandService {
 
         //brandMapper.insertSelective(BaiduBeanUtil.copyProperties(brandDTO,BrandEntity.class));
 
-        //新增品牌且可以返回主键
+        //新增品牌 且 可以返回主键
+        BrandEntity brandEntity = BaiduBeanUtil.copyProperties(brandDTO, BrandEntity.class);
+
+        //  代码优化前
+//      String name = brandEntity.getName();   //获取品牌名称
+//      char c = name.charAt(0);   //获取品牌名称第一个字符
+//      String upperCase = PinyinUtil.getUpperCase(String.valueOf(c), PinyinUtil.TO_FIRST_CHAR_PINYIN);
+//      brandEntity.setLetter(upperCase.charAt(0));
+
+        //代码优化 后
+        //获取品牌名称  获取品牌名称第一个字符  将第一个字符串转换为pinyin  获取拼音的首字母  统一转为大写
+        brandEntity.setLetter(PinyinUtil.getUpperCase(String.valueOf(brandEntity.getName().charAt(0)),PinyinUtil.TO_FIRST_CHAR_PINYIN).charAt(0));
+
+        brandMapper.insertSelective(brandEntity);
+
+
+        //代码优化 将公共的代码 抽取出来
+        this.insertCategoryAndBrand(brandDTO,brandEntity);
+
+        return this.setResultSuccess("新增成功");
+
+    }
+
+    @Override
+    public Result<JsonObject> editBrand(BrandDTO brandDTO) {
+
         BrandEntity brandEntity = BaiduBeanUtil.copyProperties(brandDTO, BrandEntity.class);
 
         //获取品牌名称
@@ -88,20 +117,30 @@ public class BrandServiceImpl extends BaseApiService implements BrandService {
         //获取拼音的首字母
         //统一转为大写
         brandEntity.setLetter(PinyinUtil.getUpperCase(String.valueOf(brandEntity.getName().charAt(0)),
-             PinyinUtil.TO_FIRST_CHAR_PINYIN).charAt(0));
+                PinyinUtil.TO_FIRST_CHAR_PINYIN).charAt(0));
 
-        brandMapper.insertSelective(brandEntity);
+        //修改
+        brandMapper.updateByPrimaryKeySelective(brandEntity);
 
-        // 拆分后
-//      String name = brandEntity.getName();
-//      char c = name.charAt(0);
-//      String upperCase = PinyinUtil.getUpperCase(String.valueOf(c), PinyinUtil.TO_FIRST_CHAR_PINYIN);
-//      brandEntity.setLetter(upperCase.charAt(0));
-//      brandMapper.insertSelective(brandEntity);
+        //通过brandId 删除中间表的关系
+        Example example = new Example(CategoryBrandEntity.class);
+        example.createCriteria().andEqualTo("brandId",brandEntity.getId());
+        categoryBrandMapper.deleteByExample(example);
 
+        //新增 新的数据
+        //代码优化 将公共的代码 抽取出来
+        this.insertCategoryAndBrand(brandDTO,brandEntity);
+
+        return this.setResultSuccess("修改成功");
+
+    }
+
+
+    //新增 关系数据
+    //代码优化(封装) 将公共的代码结合
+    public void insertCategoryAndBrand(BrandDTO brandDTO,BrandEntity brandEntity){
 
         if(brandDTO.getCategory().contains(",")){
-
 
             //通过split方法分割字符串的Array
             //Arrays.asList将Array转换为List
@@ -112,20 +151,20 @@ public class BrandServiceImpl extends BaseApiService implements BrandService {
             List<CategoryBrandEntity> categoryBrandEntities = Arrays.asList(brandDTO.getCategory().split(",")).stream().map(cid -> {
 
                 CategoryBrandEntity entity = new CategoryBrandEntity();
-
                 entity.setCategoryId(StringUtil.toInteger(cid));
                 entity.setBrandId(brandEntity.getId());
 
                 return entity;
 
             }).collect(Collectors.toList());
+
             //批量新增
             categoryBrandMapper.insertList(categoryBrandEntities);
 
-            //     拆分后
-//          String[] cidArr = brandDTO.getCategory().split(",");
+            //     代码拆分后
+//          String[] cidArr = brandDTO.getCategory().split(","); //通过split方法分割字符串的Array
 //
-//          List<String> list = Arrays.asList(cidArr);
+//          List<String> list = Arrays.asList(cidArr); //Arrays.asList将Array转换为List
 //
 //          List<CategoryBrandEntity> categoryBrandEntities  = new ArrayList<>();
 //
@@ -135,9 +174,6 @@ public class BrandServiceImpl extends BaseApiService implements BrandService {
 //             entity.setBrandId(brandEntity.getId());
 //             categoryBrandEntities.add(entity);
 //          });
-            //批量新增
-//          categoryBrandMapper.insertList(categoryBrandEntities);
-
 
         }else{
 
@@ -150,9 +186,7 @@ public class BrandServiceImpl extends BaseApiService implements BrandService {
 
         }
 
-        return this.setResultSuccess();
     }
 
-    
 
 }

@@ -51,7 +51,7 @@ public class CategoryServiceImpl extends BaseApiService implements CategoryServi
 
         categoryMapper.insertSelective(categoryEntity);
 
-        return this.setResultSuccess();
+        return this.setResultSuccess("新增成功");
 
     }
 
@@ -61,9 +61,10 @@ public class CategoryServiceImpl extends BaseApiService implements CategoryServi
 
         categoryMapper.updateByPrimaryKeySelective(categoryEntity);
 
-        return this.setResultSuccess();
+        return this.setResultSuccess("修改成功");
 
     }
+
 
     @Transactional
     @Override
@@ -91,7 +92,17 @@ public class CategoryServiceImpl extends BaseApiService implements CategoryServi
         }
 
         categoryMapper.deleteByPrimaryKey(id);
-        return this.setResultSuccess();
+        return this.setResultSuccess("删除成功");
+    }
+
+
+    //数据回显
+    @Transactional
+    @Override
+    public Result<List<CategoryEntity>> getByBrand(Integer brandId) {
+        List<CategoryEntity> byBrandId = categoryMapper.getByBrandId(brandId);
+        
+        return this.setResultSuccess(byBrandId);
     }
 
 
