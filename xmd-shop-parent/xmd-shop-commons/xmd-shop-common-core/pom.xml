@@ -59,6 +59,12 @@
             <version>2.5.1</version>
         </dependency>
 
+        <!-- SpringBoot-整合Web组件 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
     </dependencies>
 
 

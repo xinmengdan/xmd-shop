@@ -10,10 +10,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 @Api(value = "品牌接口")
 public interface BrandService {
@@ -30,5 +27,8 @@ public interface BrandService {
     @PutMapping(value = "brand/save")
     public Result<JsonObject> editBrand(@Validated({MrOperation.Update.class}) @RequestBody BrandDTO brandDTO);
 
+    @ApiOperation(value = "通过id删除品牌信息")
+    @DeleteMapping(value = "brand/delete")
+    public Result<JsonObject> deleteBrand(Integer id);
 
 }

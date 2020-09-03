@@ -106,6 +106,7 @@ public class BrandServiceImpl extends BaseApiService implements BrandService {
 
     }
 
+    @Transactional
     @Override
     public Result<JsonObject> editBrand(BrandDTO brandDTO) {
 
@@ -122,10 +123,8 @@ public class BrandServiceImpl extends BaseApiService implements BrandService {
         //修改
         brandMapper.updateByPrimaryKeySelective(brandEntity);
 
-        //通过brandId 删除中间表的关系
-        Example example = new Example(CategoryBrandEntity.class);
-        example.createCriteria().andEqualTo("brandId",brandEntity.getId());
-        categoryBrandMapper.deleteByExample(example);
+        //删除关系 将公共代码抽取出来
+        this.deleteCategoryAndBrand(brandEntity.getId());
 
         //新增 新的数据
         //代码优化 将公共的代码 抽取出来
@@ -133,6 +132,19 @@ public class BrandServiceImpl extends BaseApiService implements BrandService {
 
         return this.setResultSuccess("修改成功");
 
+    }
+
+    @Transactional
+    @Override
+    public Result<JsonObject> deleteBrand(Integer id) {
+
+        //删除品牌
+        brandMapper.deleteByPrimaryKey(id);
+
+        //删除关系 将公共代码抽取出来
+        this.deleteCategoryAndBrand(id);
+
+        return this.setResultSuccess("删除成功");
     }
 
 
@@ -185,6 +197,17 @@ public class BrandServiceImpl extends BaseApiService implements BrandService {
             categoryBrandMapper.insertSelective(entity);
 
         }
+
+    }
+
+
+    //代码优化  删除关系
+    private void deleteCategoryAndBrand(Integer id){
+
+        // 通过brandId 删除中间表的关系
+        Example example = new Example(CategoryBrandEntity.class);
+        example.createCriteria().andEqualTo("brandId",id);
+        categoryBrandMapper.deleteByExample(example);
 
     }
 
