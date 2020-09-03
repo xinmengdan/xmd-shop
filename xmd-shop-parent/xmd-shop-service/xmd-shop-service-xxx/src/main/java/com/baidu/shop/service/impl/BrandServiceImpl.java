@@ -6,7 +6,6 @@ import com.baidu.shop.base.Result;
 import com.baidu.shop.dto.BrandDTO;
 import com.baidu.shop.entity.BrandEntity;
 import com.baidu.shop.entity.CategoryBrandEntity;
-import com.baidu.shop.entity.CategoryEntity;
 import com.baidu.shop.mapper.BrandMapper;
 import com.baidu.shop.mapper.CategoryBrandMapper;
 import com.baidu.shop.service.BrandService;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -173,7 +171,7 @@ public class BrandServiceImpl extends BaseApiService implements BrandService {
             //批量新增
             categoryBrandMapper.insertList(categoryBrandEntities);
 
-            //     代码拆分后
+            //     代码拆分后 优化
 //          String[] cidArr = brandDTO.getCategory().split(","); //通过split方法分割字符串的Array
 //
 //          List<String> list = Arrays.asList(cidArr); //Arrays.asList将Array转换为List

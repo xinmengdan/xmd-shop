@@ -2,6 +2,7 @@ package com.baidu.shop.dto;
 
 import com.baidu.shop.base.BaseDTO;
 import com.baidu.shop.validate.group.MrOperation;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import lombok.Data;
@@ -17,7 +18,7 @@ import javax.validation.constraints.NotNull;
  * @Version V1.0
  **/
 
-@ApiOperation(value = "规格组数据传输DTO")
+@ApiModel(value = "规格组数据传输DTO")
 @Data
 public class SpecGroupDTO extends BaseDTO {
 
