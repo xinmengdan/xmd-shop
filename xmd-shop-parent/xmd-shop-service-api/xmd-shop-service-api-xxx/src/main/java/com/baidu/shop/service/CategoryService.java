@@ -16,22 +16,22 @@ public interface CategoryService {
 
     @ApiOperation(value = "查询商品分类")
     @GetMapping(value = "category/list")
-    public Result<List<CategoryEntity>> getCategoryByPid(Integer pid);
+    Result<List<CategoryEntity>> getCategoryByPid(Integer pid);
 
     @ApiOperation(value = "新增商品分类")
     @PostMapping(value = "category/add")
-    public Result<JsonObject> addCategory(@Validated({MrOperation.Add.class})@RequestBody CategoryEntity categoryEntity);
+    Result<JsonObject> addCategory(@Validated({MrOperation.Add.class})@RequestBody CategoryEntity categoryEntity);
 
     @ApiOperation(value = "修改商品分类")
     @PutMapping(value = "category/edit")
-    public Result<JsonObject> editCategory(@Validated({MrOperation.Update.class}) @RequestBody CategoryEntity categoryEntity);
+    Result<JsonObject> editCategory(@Validated({MrOperation.Update.class}) @RequestBody CategoryEntity categoryEntity);
 
     @ApiOperation(value = "删除商品分类")
     @DeleteMapping(value = "category/delete")
-    public Result<JsonObject> deleteCategory(Integer id);
+    Result<JsonObject> deleteCategory(Integer id);
 
     @ApiOperation(value = "通过品牌id查询商品分类信息")
     @GetMapping(value = "category/getByBrand")
-    public Result<List<CategoryEntity>> getByBrand(Integer brandId);
+    Result<List<CategoryEntity>> getByBrand(Integer brandId);
 
 }

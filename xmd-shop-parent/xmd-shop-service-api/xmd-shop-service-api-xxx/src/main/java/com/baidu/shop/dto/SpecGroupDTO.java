@@ -4,7 +4,6 @@ import com.baidu.shop.base.BaseDTO;
 import com.baidu.shop.validate.group.MrOperation;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import io.swagger.annotations.ApiOperation;
 import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;

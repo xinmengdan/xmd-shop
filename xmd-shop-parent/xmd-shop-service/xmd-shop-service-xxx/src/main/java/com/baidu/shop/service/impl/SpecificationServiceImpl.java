@@ -56,7 +56,7 @@ public class SpecificationServiceImpl extends BaseApiService implements  Specifi
 
         specGroupMapper.insertSelective(BaiduBeanUtil.copyProperties(specGroupDTO,SpecGroupEntity.class));
 
-        return this.setResultSuccess("新增成功");
+        return this.setResultSuccess("规格组新增成功");
     }
 
     @Transactional
@@ -65,16 +65,23 @@ public class SpecificationServiceImpl extends BaseApiService implements  Specifi
 
         specGroupMapper.updateByPrimaryKeySelective(BaiduBeanUtil.copyProperties(specGroupDTO,SpecGroupEntity.class));
 
-        return this.setResultSuccess("修改成功");
+        return this.setResultSuccess("规格组修改成功");
     }
 
     @Transactional
     @Override
     public Result<List<JSONObject>> delete(Integer id) {
 
+        Example example = new Example(SpecParamEntity.class);
+        example.createCriteria().andEqualTo("groupId",id);
+        List<SpecParamEntity> list = specParamMapper.selectByExample(example);
+        if(list.size() > 0){
+            return this.setResultError("规则组中包含参数无法删除");
+        }
+
         specGroupMapper.deleteByPrimaryKey(id);
 
-        return this.setResultSuccess("删除成功");
+        return this.setResultSuccess("规格组删除成功");
     }
 
 
@@ -100,7 +107,7 @@ public class SpecificationServiceImpl extends BaseApiService implements  Specifi
 
         specParamMapper.insertSelective(BaiduBeanUtil.copyProperties(specParamDTO,SpecParamEntity.class));
 
-        return this.setResultSuccess("新增规格参数成功");
+        return this.setResultSuccess("规格参数新增成功");
     }
 
     @Transactional
@@ -109,7 +116,7 @@ public class SpecificationServiceImpl extends BaseApiService implements  Specifi
 
         specParamMapper.updateByPrimaryKeySelective(BaiduBeanUtil.copyProperties(specParamDTO,SpecParamEntity.class));
 
-        return this.setResultSuccess("修改规格参数成功");
+        return this.setResultSuccess("规格参数修改成功");
     }
 
     @Transactional
@@ -118,7 +125,8 @@ public class SpecificationServiceImpl extends BaseApiService implements  Specifi
 
         specParamMapper.deleteByPrimaryKey(id);
 
-        return this.setResultSuccess("删除规格参数成功");
+        return this.setResultSuccess("规格参数删除成功");
+
     }
 
 }

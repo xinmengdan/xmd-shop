@@ -55,7 +55,7 @@ public interface SpecificationService {
 
     @ApiModelProperty(value = "新增规格参数")
     @PutMapping(value = "specparam/save")
-    Result<List<JSONObject>> editparam(@Validated ({MrOperation.Add.class}) @RequestBody SpecParamDTO specParamDTO);
+    Result<List<JSONObject>> editparam(@Validated ({MrOperation.Update.class}) @RequestBody SpecParamDTO specParamDTO);
 
     @ApiModelProperty(value = "删除规格参数")
     @DeleteMapping(value = "specparam/delete")
