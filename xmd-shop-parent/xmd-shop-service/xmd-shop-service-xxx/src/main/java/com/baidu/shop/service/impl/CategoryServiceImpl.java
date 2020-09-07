@@ -5,11 +5,9 @@ import com.baidu.shop.base.Result;
 import com.baidu.shop.entity.CategoryBrandEntity;
 import com.baidu.shop.entity.CategoryEntity;
 import com.baidu.shop.entity.SpecGroupEntity;
-import com.baidu.shop.entity.SpecParamEntity;
 import com.baidu.shop.mapper.CategoryBrandMapper;
 import com.baidu.shop.mapper.CategoryMapper;
 import com.baidu.shop.mapper.SpecGroupMapper;
-import com.baidu.shop.mapper.SpecParamMapper;
 import com.baidu.shop.service.CategoryService;
 import com.google.gson.JsonObject;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,7 +41,6 @@ public class CategoryServiceImpl extends BaseApiService implements CategoryServi
     public Result<List<CategoryEntity>> getCategoryByPid(Integer pid) {
 
         CategoryEntity categoryEntity = new CategoryEntity();
-
         categoryEntity.setParentId(pid);
 
         List<CategoryEntity> list = categoryMapper.select(categoryEntity);
@@ -92,18 +89,9 @@ public class CategoryServiceImpl extends BaseApiService implements CategoryServi
             return this.setResultSuccess("当前节点为父节点 不能被删除");
         }
 
-
         Example example = new Example(CategoryEntity.class);
         example.createCriteria().andEqualTo("parentId",categoryEntity.getParentId());
         List<CategoryEntity> list =  categoryMapper.selectByExample(example);
-
-        if(list.size() == 1){
-            CategoryEntity parentCateEntity = new CategoryEntity();
-            parentCateEntity.setId(categoryEntity.getParentId());
-            parentCateEntity.setIsParent(0);
-            categoryMapper.updateByPrimaryKeySelective(parentCateEntity);
-        }
-
 
         //分类绑定规格组 不能删除
         Example example1 = new Example(SpecGroupEntity.class);
@@ -113,7 +101,6 @@ public class CategoryServiceImpl extends BaseApiService implements CategoryServi
             return this.setResultError("分类绑定规格组不能删除");
         }
 
-
         //分类绑定品牌
         Example example2 = new Example(CategoryBrandEntity.class);
         example2.createCriteria().andEqualTo("categoryId",id);
@@ -121,6 +108,16 @@ public class CategoryServiceImpl extends BaseApiService implements CategoryServi
         if(list2.size() == 1){
             return this.setResultError("分类绑定品牌不能删除");
         }
+
+
+        if(list.size() == 1){
+            CategoryEntity parentCateEntity = new CategoryEntity();
+            parentCateEntity.setId(categoryEntity.getParentId());
+            parentCateEntity.setIsParent(0);
+
+            categoryMapper.updateByPrimaryKeySelective(parentCateEntity);
+        }
+
 
         categoryMapper.deleteByPrimaryKey(id);
         return this.setResultSuccess("删除成功");

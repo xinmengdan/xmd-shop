@@ -9,6 +9,7 @@ import com.baidu.shop.entity.CategoryBrandEntity;
 import com.baidu.shop.mapper.BrandMapper;
 import com.baidu.shop.mapper.CategoryBrandMapper;
 import com.baidu.shop.service.BrandService;
+import com.baidu.shop.utils.ObjectUtil;
 import com.baidu.shop.utils.PinyinUtil;
 import com.baidu.shop.utils.StringUtil;
 import com.github.pagehelper.PageHelper;
@@ -55,11 +56,21 @@ public class BrandServiceImpl extends BaseApiService implements BrandService {
 //        }
 
         //分页   代码优化
-        PageHelper.startPage(brandDTO.getPage(),brandDTO.getRows());
+        //商品列表分页
+        if(ObjectUtil.isNotNull(brandDTO.getPage()) && ObjectUtil.isNotNull(brandDTO.getRows())){
+            PageHelper.startPage(brandDTO.getPage(),brandDTO.getRows());
+        }
 
         //排序 条件查询
         Example example = new Example(BrandEntity.class);
         if(StringUtil.isNotEmpty(brandDTO.getSort())) example.setOrderByClause(brandDTO.getOrderByClause());
+
+        //商品列表
+        Example.Criteria criteria = example.createCriteria();
+        if(ObjectUtil.isNotNull(brandDTO.getId())){
+            criteria.andEqualTo("id",brandDTO.getId());
+        }
+
 
         //条件查询
         if (StringUtil.isNotEmpty(brandDTO.getName())){
