@@ -40,6 +40,16 @@ public class BrandServiceImpl extends BaseApiService implements BrandService {
     @Resource
     private CategoryBrandMapper categoryBrandMapper;
 
+
+    @Override
+    public Result<List<BrandEntity>> getBrandByCategory(Integer cid) {
+
+        List<BrandEntity> list =  brandMapper.getBrandByCategoryId(cid);
+
+        return this.setResultSuccess(list);
+    }
+
+
     //查询 (获取品牌信息)
     @Override
     public Result<PageInfo<BrandEntity>> getBrandInfo(BrandDTO brandDTO) {
@@ -65,7 +75,7 @@ public class BrandServiceImpl extends BaseApiService implements BrandService {
         Example example = new Example(BrandEntity.class);
         if(StringUtil.isNotEmpty(brandDTO.getSort())) example.setOrderByClause(brandDTO.getOrderByClause());
 
-        //商品列表
+        //商品列表(分页 总条数)
         Example.Criteria criteria = example.createCriteria();
         if(ObjectUtil.isNotNull(brandDTO.getId())){
             criteria.andEqualTo("id",brandDTO.getId());
@@ -151,7 +161,6 @@ public class BrandServiceImpl extends BaseApiService implements BrandService {
 
         return this.setResultSuccess("删除成功");
     }
-
 
 
     //新增 关系数据

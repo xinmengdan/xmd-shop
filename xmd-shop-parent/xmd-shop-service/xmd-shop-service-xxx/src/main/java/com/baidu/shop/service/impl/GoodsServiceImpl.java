@@ -60,6 +60,7 @@ public class GoodsServiceImpl extends BaseApiService implements GoodsService {
 
         //查询条件
         Example.Criteria criteria = example.createCriteria();
+
         //按标题模糊匹配
         if(StringUtil.isNotEmpty(spuDTO.getTitle())){
             criteria.andLike("title","%" + spuDTO.getTitle() + "%");

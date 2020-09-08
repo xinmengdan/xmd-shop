@@ -35,7 +35,7 @@ public class SpecificationServiceImpl extends BaseApiService implements  Specifi
     @Resource
     private SpecParamMapper specParamMapper;
 
-    //规格组
+    //规格组 getSpecGroupInfo
     @Override
     public Result<List<SpecGroupEntity>> list(SpecGroupDTO specGroupDTO) {
 
@@ -75,6 +75,7 @@ public class SpecificationServiceImpl extends BaseApiService implements  Specifi
         Example example = new Example(SpecParamEntity.class);
         example.createCriteria().andEqualTo("groupId",id);
         List<SpecParamEntity> list = specParamMapper.selectByExample(example);
+
         if(list.size() > 0){
             return this.setResultError("规则组中包含参数无法删除");
         }
@@ -85,16 +86,25 @@ public class SpecificationServiceImpl extends BaseApiService implements  Specifi
     }
 
 
-    //规格参数
+    //规格参数 getSpecParamInfo
     @Override
     public Result<List<SpecParamEntity>> list(SpecParamDTO specParamDTO) {
 
-        if(ObjectUtil.isNull(specParamDTO.getGroupId())){
-            return this.setResultError("规格组id不能为空");
-        }
+//        if(ObjectUtil.isNull(specParamDTO.getGroupId())){
+//            return this.setResultError("规格组id不能为空");
+//        }
 
         Example example = new Example(SpecParamEntity.class);
-        example.createCriteria().andEqualTo("groupId",specParamDTO.getGroupId());
+        Example.Criteria criteria = example.createCriteria();
+
+        if(ObjectUtil.isNotNull(specParamDTO.getGroupId())){
+            criteria.andEqualTo("groupId",specParamDTO.getGroupId());
+        }
+
+        if(ObjectUtil.isNotNull(specParamDTO.getCid())){
+            criteria.andEqualTo("cid",specParamDTO.getCid());
+        }
+       // example.createCriteria().andEqualTo("groupId",specParamDTO.getGroupId());
 
         List<SpecParamEntity> list = specParamMapper.selectByExample(example);
 
