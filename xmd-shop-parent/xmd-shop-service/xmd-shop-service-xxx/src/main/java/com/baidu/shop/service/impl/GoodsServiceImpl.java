@@ -161,7 +161,7 @@ public class GoodsServiceImpl extends BaseApiService implements GoodsService {
     }
 
     //商品管理 新增
-    @Transactional
+    @Transactional //回滚
     @Override
     public Result<JSONObject> save(SpuDTO spuDTO) {
         //System.out.println(spuDTO);
@@ -174,7 +174,6 @@ public class GoodsServiceImpl extends BaseApiService implements GoodsService {
         spuEntity.setValid(1);
         spuEntity.setCreateTime(date);
         spuEntity.setLastUpdateTime(date);
-
         spuMapper.insertSelective(spuEntity);
 
 
@@ -183,20 +182,16 @@ public class GoodsServiceImpl extends BaseApiService implements GoodsService {
         //spudetail
         SpuDetailEntity spuDetailEntity = BaiduBeanUtil.copyProperties(spuDTO.getSpuDetail(), SpuDetailEntity.class);
         spuDetailEntity.setSpuId(spuId);
-
         spuDetailMapper.insertSelective(spuDetailEntity);
 
 
-        List<SkuDTO> skus = spuDTO.getSkus();
-
-        skus.stream().forEach(skuDTO -> {
+        spuDTO.getSkus().stream().forEach(skuDTO -> {
 
             //sku
             SkuEntity skuEntity = BaiduBeanUtil.copyProperties(skuDTO, SkuEntity.class);
             skuEntity.setSpuId(spuId);
             skuEntity.setCreateTime(date);
             skuEntity.setLastUpdateTime(date);
-
             skuMapper.insertSelective(skuEntity);
 
             //stock
@@ -208,6 +203,21 @@ public class GoodsServiceImpl extends BaseApiService implements GoodsService {
         });
 
         return this.setResultSuccess();
+    }
+
+    @Override
+    public Result<SpuDetailEntity> getSpuDetailBySpu(Integer spuId) {
+
+        SpuDetailEntity spuDetailEntity = spuDetailMapper.selectByPrimaryKey(spuId);
+
+        return this.setResultSuccess(spuDetailEntity);
+    }
+
+
+    @Override
+    public Result<List<SkuDTO>> getSkuBySpuId(Integer spuId) {
+        List<SkuDTO> list = skuMapper.seleckAndSkuAndStockBySpuId(spuId);
+        return this.setResultSuccess(list);
     }
 
 
