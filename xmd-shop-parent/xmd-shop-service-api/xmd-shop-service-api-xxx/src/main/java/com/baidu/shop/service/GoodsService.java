@@ -9,6 +9,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
@@ -31,5 +32,9 @@ public interface GoodsService {
     @ApiModelProperty(value = "获取sku信息")
     @GetMapping(value = "goods/getSkuBySpuId")
     Result<List<SkuDTO>> getSkuBySpuId(Integer spuId);
+
+    @ApiModelProperty(value = "修改商品信息")
+    @PutMapping(value = "goods/save")
+    Result<JSONObject> edit(@RequestBody  SpuDTO spuDTO);
 
 }
