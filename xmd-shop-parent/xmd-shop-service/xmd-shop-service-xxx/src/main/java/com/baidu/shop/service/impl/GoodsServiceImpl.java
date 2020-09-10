@@ -235,6 +235,8 @@ public class GoodsServiceImpl extends BaseApiService implements GoodsService {
     @Override
     public Result<JSONObject> delete(Integer spuId) {
 
+
+
         //删除spu
         spuMapper.deleteByPrimaryKey(spuId);
 

@@ -5,9 +5,11 @@ import com.baidu.shop.base.Result;
 import com.baidu.shop.entity.CategoryBrandEntity;
 import com.baidu.shop.entity.CategoryEntity;
 import com.baidu.shop.entity.SpecGroupEntity;
+import com.baidu.shop.entity.SpuEntity;
 import com.baidu.shop.mapper.CategoryBrandMapper;
 import com.baidu.shop.mapper.CategoryMapper;
 import com.baidu.shop.mapper.SpecGroupMapper;
+import com.baidu.shop.mapper.SpuMapper;
 import com.baidu.shop.service.CategoryService;
 import com.google.gson.JsonObject;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +37,9 @@ public class CategoryServiceImpl extends BaseApiService implements CategoryServi
 
     @Resource
     private CategoryBrandMapper categoryBrandMapper;
+
+    @Resource
+    private SpuMapper spuMapper;
 
 
     @Override
@@ -108,6 +113,12 @@ public class CategoryServiceImpl extends BaseApiService implements CategoryServi
         if(list2.size() == 1){
             return this.setResultError("分类绑定品牌不能删除");
         }
+
+        //分类绑定商品
+        Example example3 = new Example(SpuEntity.class);
+        example3.createCriteria().andEqualTo("brandId",id);
+        List<SpuEntity> list3 = spuMapper.selectByExample(example);
+        if(list3.size() > 0) return this.setResultError("分类绑定商品不能被删除");
 
 
         if(list.size() == 1){
