@@ -38,4 +38,9 @@ public interface GoodsService {
     @DeleteMapping(value = "goods/delete")
     Result<JSONObject> delete(Integer spuId);
 
+
+    @ApiModelProperty(value = "商品上下架")
+    @PutMapping(value = "goods/upOrDown")
+    Result<JSONObject> upOrDown(@RequestBody SpuDTO spuDTO);
+
 }

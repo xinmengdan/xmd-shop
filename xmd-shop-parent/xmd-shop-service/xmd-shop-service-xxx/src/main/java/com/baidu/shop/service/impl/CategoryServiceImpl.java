@@ -94,9 +94,19 @@ public class CategoryServiceImpl extends BaseApiService implements CategoryServi
             return this.setResultSuccess("当前节点为父节点 不能被删除");
         }
 
+
+
         Example example = new Example(CategoryEntity.class);
         example.createCriteria().andEqualTo("parentId",categoryEntity.getParentId());
         List<CategoryEntity> list =  categoryMapper.selectByExample(example);
+
+
+        //分类绑定商品
+        Example example3 = new Example(SpuEntity.class);
+        example3.createCriteria().andEqualTo("cid3",id);
+        List<SpuEntity> list3 = spuMapper.selectByExample(example3);
+        if(list3.size() > 0) return this.setResultError("分类绑定商品不能被删除");
+
 
         //分类绑定规格组 不能删除
         Example example1 = new Example(SpecGroupEntity.class);
@@ -113,12 +123,6 @@ public class CategoryServiceImpl extends BaseApiService implements CategoryServi
         if(list2.size() == 1){
             return this.setResultError("分类绑定品牌不能删除");
         }
-
-        //分类绑定商品
-        Example example3 = new Example(SpuEntity.class);
-        example3.createCriteria().andEqualTo("brandId",id);
-        List<SpuEntity> list3 = spuMapper.selectByExample(example);
-        if(list3.size() > 0) return this.setResultError("分类绑定商品不能被删除");
 
 
         if(list.size() == 1){

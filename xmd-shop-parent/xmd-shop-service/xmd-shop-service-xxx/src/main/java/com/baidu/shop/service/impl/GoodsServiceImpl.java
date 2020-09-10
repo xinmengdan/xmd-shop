@@ -235,8 +235,6 @@ public class GoodsServiceImpl extends BaseApiService implements GoodsService {
     @Override
     public Result<JSONObject> delete(Integer spuId) {
 
-
-
         //删除spu
         spuMapper.deleteByPrimaryKey(spuId);
 
@@ -247,6 +245,26 @@ public class GoodsServiceImpl extends BaseApiService implements GoodsService {
         this.deleteSkusAndStocks(spuId);
 
         return this.setResultSuccess();
+    }
+
+    //商品上下架
+    @Transactional
+    @Override
+    public Result<JSONObject> upOrDown(SpuDTO spuDTO) {
+
+        SpuEntity spuEntity = BaiduBeanUtil.copyProperties(spuDTO, SpuEntity.class);
+        spuEntity.setId(spuDTO.getId());
+
+        if(spuEntity.getSaleable() == 1){
+            spuEntity.setSaleable(0);
+            spuMapper.updateByPrimaryKeySelective(spuEntity);
+            return this.setResultSuccess("下架成功");
+        }else{
+            spuEntity.setSaleable(1);
+            spuMapper.updateByPrimaryKeySelective(spuEntity);
+            return this.setResultSuccess("上架成功");
+        }
+
     }
 
 
