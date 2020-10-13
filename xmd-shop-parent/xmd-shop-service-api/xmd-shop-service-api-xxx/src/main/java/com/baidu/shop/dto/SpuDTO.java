@@ -42,7 +42,7 @@ public class SpuDTO extends BaseDTO {
     private Integer cid2;
 
     @ApiModelProperty(value = "3级类目id",example = "1")
-    @NotNull(message = "2级类目id不能为空",groups = {MrOperation.Add.class})
+    @NotNull(message = "3级类目id不能为空",groups = {MrOperation.Add.class})
     private Integer cid3;
 
     @ApiModelProperty(value = "商品所属品牌id",example = "1")

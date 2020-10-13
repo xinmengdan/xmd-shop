@@ -104,7 +104,16 @@ public class SpecificationServiceImpl extends BaseApiService implements  Specifi
         if(ObjectUtil.isNotNull(specParamDTO.getCid())){
             criteria.andEqualTo("cid",specParamDTO.getCid());
         }
-       // example.createCriteria().andEqualTo("groupId",specParamDTO.getGroupId());
+
+        if(ObjectUtil.isNotNull(specParamDTO.getSearching())){
+            criteria.andEqualTo("searching",specParamDTO.getSearching());
+        }
+
+        if (ObjectUtil.isNotNull(specParamDTO.getGeneric())) {
+            criteria.andEqualTo("generic",specParamDTO.getGeneric());
+        }
+
+        // example.createCriteria().andEqualTo("groupId",specParamDTO.getGroupId());
 
         List<SpecParamEntity> list = specParamMapper.selectByExample(example);
 

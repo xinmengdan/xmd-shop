@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.baidu.shop.base.BaiduBeanUtil;
 import com.baidu.shop.base.BaseApiService;
 import com.baidu.shop.base.Result;
+import com.baidu.shop.component.MrRabbitMQ;
+import com.baidu.shop.constant.MqMessageConstant;
 import com.baidu.shop.dto.BrandDTO;
 import com.baidu.shop.dto.SkuDTO;
 import com.baidu.shop.dto.SpuDTO;
@@ -16,6 +18,7 @@ import com.baidu.shop.utils.ObjectUtil;
 import com.baidu.shop.utils.StringUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 import tk.mybatis.mapper.entity.Example;
@@ -52,7 +55,10 @@ public class GoodsServiceImpl extends BaseApiService implements GoodsService {
     @Resource
     private StockMapper stockMapper;
 
+    @Autowired
+    private MrRabbitMQ mrRabbitMQ;
 
+    //spu信息
     @Override
     public Result<List<SpuDTO>> list(SpuDTO spuDTO) {
 
@@ -74,6 +80,9 @@ public class GoodsServiceImpl extends BaseApiService implements GoodsService {
         //如果值为2的话不进行拼接查询,默认查询所有
         if(ObjectUtil.isNotNull(spuDTO.getSaleable()) && spuDTO.getSaleable() != 2){
             criteria.andEqualTo("saleable",spuDTO.getSaleable());
+        }
+        if (ObjectUtil.isNotNull(spuDTO.getId())) {
+            criteria.andEqualTo("id",spuDTO.getId());
         }
 
         //排序
@@ -116,8 +125,7 @@ public class GoodsServiceImpl extends BaseApiService implements GoodsService {
 
         }).collect(Collectors.toList());
 
-
-         //代码拆分
+         //上述代码分析
 //        List<SpuDTO> spuDTOS = new ArrayList<>();
 //        list.stream().forEach(spuEntity -> {
 //            //通过品牌id查询品牌名称
@@ -174,7 +182,6 @@ public class GoodsServiceImpl extends BaseApiService implements GoodsService {
         spuEntity.setLastUpdateTime(date);
         spuMapper.insertSelective(spuEntity);
 
-
         Integer spuId = spuEntity.getId();
 
         //spudetail
@@ -185,9 +192,10 @@ public class GoodsServiceImpl extends BaseApiService implements GoodsService {
         //新增数据 代码抽取
         this.addSkuAndstocks(spuDTO.getSkus(),spuId,date);
 
+        mrRabbitMQ.send(spuEntity.getId().toString(), MqMessageConstant.SPU_ROUT_KEY_SAVE);
+
         return this.setResultSuccess();
     }
-
 
     //通过 spuId 获取SpuDetail信息
     @Override
@@ -206,10 +214,16 @@ public class GoodsServiceImpl extends BaseApiService implements GoodsService {
     }
 
 
-    @Transactional
+    //修改
     @Override
     public Result<JSONObject> edit(SpuDTO spuDTO) {
+        this.editTransaction(spuDTO);
+        mrRabbitMQ.send(spuDTO.getId().toString(),MqMessageConstant.SPU_ROUT_KEY_UPDATE);
+        return this.setResultSuccess();
+    }
 
+    @Transactional
+    public  void editTransaction(SpuDTO spuDTO){
         Date date = new Date();
 
         //修改spu
@@ -226,15 +240,21 @@ public class GoodsServiceImpl extends BaseApiService implements GoodsService {
 
         //新增数据 代码抽取
         this.addSkuAndstocks(spuDTO.getSkus(),spuDTO.getId(),date);
+    }
 
+
+    @Override
+    public Result<JSONObject> delete(Integer spuId) {
+
+        this.deleteTransactional(spuId);
+
+        mrRabbitMQ.send(spuId.toString(), MqMessageConstant.SPU_ROUT_KEY_DELETE);
 
         return this.setResultSuccess();
     }
 
     @Transactional
-    @Override
-    public Result<JSONObject> delete(Integer spuId) {
-
+    public void deleteTransactional(Integer spuId){
         //删除spu
         spuMapper.deleteByPrimaryKey(spuId);
 
@@ -243,9 +263,28 @@ public class GoodsServiceImpl extends BaseApiService implements GoodsService {
 
         //提取代码
         this.deleteSkusAndStocks(spuId);
-
-        return this.setResultSuccess();
     }
+
+    //删除
+    private void deleteSkusAndStocks(Integer spuId){
+
+        Example example = new Example(SkuEntity.class);
+        example.createCriteria().andEqualTo("spuId",spuId);
+
+        //通过spuId 查询出要 删除sku
+        List<Long> skuIdList = skuMapper.selectByExample(example).stream().map(sku -> sku.getId()).collect(Collectors.toList());
+
+        if(skuIdList.size() > 0){ //判断 以防全表删除
+            //通过SkuIdList 删除sku
+            skuMapper.deleteByIdList(skuIdList);
+
+            //通过skuIdList 删除库存(stock)
+            stockMapper.deleteByIdList(skuIdList);
+        }
+
+    }
+
+
 
     //商品上下架
     @Transactional
@@ -268,7 +307,7 @@ public class GoodsServiceImpl extends BaseApiService implements GoodsService {
     }
 
 
-    //代码提取  代码重复
+    //代码提取  代码重复-------------------------------------------------------------
     //新增 修改
     private void addSkuAndstocks(List<SkuDTO> skus,Integer spuId,Date date){
 
@@ -291,23 +330,6 @@ public class GoodsServiceImpl extends BaseApiService implements GoodsService {
 
     }
 
-    //删除
-    private void deleteSkusAndStocks(Integer spuId){
 
-        Example example = new Example(SkuEntity.class);
-        example.createCriteria().andEqualTo("spuId",spuId);
-
-        //通过spuId 查询出要 删除sku
-        List<Long> skuIdList = skuMapper.selectByExample(example).stream().map(sku -> sku.getId()).collect(Collectors.toList());
-
-        if(skuIdList.size() > 0){ //判断 以防全表删除
-            //通过SkuIdList 删除sku
-            skuMapper.deleteByIdList(skuIdList);
-
-            //通过skuIdList 删除库存(stock)
-            stockMapper.deleteByIdList(skuIdList);
-        }
-
-    }
 
 }

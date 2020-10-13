@@ -6,7 +6,6 @@ import com.baidu.shop.base.Result;
 import com.baidu.shop.dto.BrandDTO;
 import com.baidu.shop.entity.BrandEntity;
 import com.baidu.shop.entity.CategoryBrandEntity;
-import com.baidu.shop.entity.SpecGroupEntity;
 import com.baidu.shop.entity.SpuEntity;
 import com.baidu.shop.mapper.BrandMapper;
 import com.baidu.shop.mapper.CategoryBrandMapper;
@@ -54,6 +53,18 @@ public class BrandServiceImpl extends BaseApiService implements BrandService {
 
         return this.setResultSuccess(list);
     }
+
+
+    @Override
+    public Result<List<BrandEntity>> getBrandByIdList(String brandIds) {
+
+        List<Integer> brandIdsArr = Arrays.asList(brandIds.split(",")).stream().map(brandIdStr -> Integer.parseInt(brandIdStr)).collect(Collectors.toList());
+
+        List<BrandEntity> list = brandMapper.selectByIdList(brandIdsArr);
+        
+        return this.setResultSuccess(list);
+    }
+
 
 
     //查询 (获取品牌信息)

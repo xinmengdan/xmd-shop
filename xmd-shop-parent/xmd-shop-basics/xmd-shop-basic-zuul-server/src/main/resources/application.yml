@@ -14,6 +14,10 @@ zuul:
       path: /api-xxx/**
       serviceId: xxx-service
 
+    api-search:
+      path: /api-search/**
+      serviceId: search-server
+
   # 启用重试
   retryable: true
   # 包含此路径的不进行路由
@@ -37,7 +41,7 @@ hystrix:
       execution:
         isolation:
           thread:
-            timeoutInMilliseconds: 10000 # 熔断超时时长：6000ms
+            timeoutInMilliseconds: 15000 # 熔断超时时长：6000ms
 
 eureka:
   client:
