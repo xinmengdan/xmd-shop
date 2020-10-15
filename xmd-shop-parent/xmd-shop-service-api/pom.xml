@@ -17,6 +17,7 @@
         <module>xmd-shop-service-api-xxx</module>
         <module>xmd-shop-service-api-search</module>
         <module>xmd-shop-service-api-template</module>
+        <module>xmd-shop-service-api-user</module>
     </modules>
 
     <dependencies>

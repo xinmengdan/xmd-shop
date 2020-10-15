@@ -24,7 +24,6 @@ public class MqMessageConstant {
     public static  final String SPU_QUEUE_PAGE_UPDATE="spu_queue_page_update";
     public static  final String SPU_QUEUE_PAGE_DELETE="spu_queue_page_delete";
 
-
     public static final String ALTERNATE_EXCHANGE = "exchange.ae";
     public static final String EXCHANGE = "exchange.mr";
     //Dead Letter Exchanges

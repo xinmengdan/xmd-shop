@@ -17,6 +17,7 @@
         <module>xmd-shop-basic-eureka-server</module>
         <module>xmd-shop-basic-zuul-server</module>
         <module>xmd-shop-basic-upload-server</module>
+        <module>xmd-shop-basic-user-oauth</module>
     </modules>
 
 </project>
