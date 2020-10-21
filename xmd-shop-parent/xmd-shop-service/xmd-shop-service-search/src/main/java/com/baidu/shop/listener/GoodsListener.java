@@ -53,18 +53,18 @@ public class GoodsListener {
     }
 
     @RabbitListener(
-            bindings = @QueueBinding(
-                    value = @Queue(
-                            value = MqMessageConstant.SPU_QUEUE_SEARCH_DELETE,
-                            durable = "true"
-                    ),
-                    exchange = @Exchange(
-                            value = MqMessageConstant.EXCHANGE,
-                            ignoreDeclarationExceptions = "true",
-                            type = ExchangeTypes.TOPIC
-                    ),
-                    key = MqMessageConstant.SPU_ROUT_KEY_DELETE
-            )
+        bindings = @QueueBinding(
+            value = @Queue(
+                    value = MqMessageConstant.SPU_QUEUE_SEARCH_DELETE,
+                    durable = "true"
+            ),
+            exchange = @Exchange(
+                    value = MqMessageConstant.EXCHANGE,
+                    ignoreDeclarationExceptions = "true",
+                    type = ExchangeTypes.TOPIC
+            ),
+            key = MqMessageConstant.SPU_ROUT_KEY_DELETE
+        )
     )
     public void delete(Message message, Channel channel) throws IOException {
 

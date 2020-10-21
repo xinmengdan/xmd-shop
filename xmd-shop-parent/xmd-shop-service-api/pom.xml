@@ -18,6 +18,8 @@
         <module>xmd-shop-service-api-search</module>
         <module>xmd-shop-service-api-template</module>
         <module>xmd-shop-service-api-user</module>
+        <module>xmd-shop-service-api-car</module>
+        <module>xmd-shop-service-api-order</module>
     </modules>
 
     <dependencies>

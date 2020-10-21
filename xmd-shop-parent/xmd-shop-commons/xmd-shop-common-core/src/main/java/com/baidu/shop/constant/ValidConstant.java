@@ -9,6 +9,8 @@ package com.baidu.shop.constant;
  **/
 public class ValidConstant {
 
-    public static final String VALID_USER_PHONE_CODE = "user_phone_code";
+    public static final String VALID_USER_PHONE_CODE = "user_phone_code_";
+
+    public static final String USER_GOODS_CAR = "user_goods_car_";
 
 }

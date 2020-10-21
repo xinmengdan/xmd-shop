@@ -19,4 +19,8 @@ public class HTTPStatus {
 
     public static final int VALID_CODE_ERROR = 5003;//验证码错误
 
+    public static final int VALID_USER_PASSWORD_ERROR = 5004;//参数效验失败(用户名或密码错误)
+
+    public static final int VERIFY_ERROR = 403;//参数效验失败(用户失效)
+
 }

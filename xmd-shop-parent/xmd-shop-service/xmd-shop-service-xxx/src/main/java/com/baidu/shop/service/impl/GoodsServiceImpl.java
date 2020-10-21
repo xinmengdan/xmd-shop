@@ -58,6 +58,7 @@ public class GoodsServiceImpl extends BaseApiService implements GoodsService {
     @Autowired
     private MrRabbitMQ mrRabbitMQ;
 
+
     //spu信息
     @Override
     public Result<List<SpuDTO>> list(SpuDTO spuDTO) {
@@ -285,7 +286,6 @@ public class GoodsServiceImpl extends BaseApiService implements GoodsService {
     }
 
 
-
     //商品上下架
     @Transactional
     @Override
@@ -304,6 +304,14 @@ public class GoodsServiceImpl extends BaseApiService implements GoodsService {
             return this.setResultSuccess("上架成功");
         }
 
+    }
+
+    @Override
+    public Result<SkuEntity> getSkuBySkuId(Long skuId) {
+
+        SkuEntity skuEntity = skuMapper.selectByPrimaryKey(skuId);
+
+        return this.setResultSuccess(skuEntity);
     }
 
 

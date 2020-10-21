@@ -23,7 +23,7 @@ import java.util.List;
  **/
 @RestControllerAdvice
 @Slf4j
-public class GlobalException {
+public class GlobalException {//全局异常处理
 
     @ExceptionHandler(RuntimeException.class)
     public Result<JSONObject> test(HttpServletRequest req, Exception e){

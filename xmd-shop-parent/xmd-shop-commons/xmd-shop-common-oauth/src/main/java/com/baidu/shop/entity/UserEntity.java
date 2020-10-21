@@ -1,12 +1,14 @@
 package com.baidu.shop.entity;
 
-import com.sun.istack.internal.NotNull;
+import com.baidu.shop.validate.group.MrOperation;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import sun.plugin2.message.Message;
 
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.Date;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 /**
  * @ClassName UserEntity
