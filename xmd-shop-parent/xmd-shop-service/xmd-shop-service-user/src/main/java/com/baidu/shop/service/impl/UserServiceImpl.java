@@ -5,7 +5,7 @@ import com.baidu.shop.base.BaiduBeanUtil;
 import com.baidu.shop.base.BaseApiService;
 import com.baidu.shop.base.Result;
 import com.baidu.shop.constant.UserConstant;
-import com.baidu.shop.constant.ValidConstant;
+import com.baidu.shop.constant.MrshopConstant;
 import com.baidu.shop.dto.UserDTO;
 import com.baidu.shop.entity.UserEntity;
 import com.baidu.shop.mapper.UserMapper;
@@ -78,8 +78,8 @@ public class UserServiceImpl extends BaseApiService implements UserService {
         //发送短信验证码
         //LuosimaoDuanxinUtil.sendSpeak(userDTO.getPhone(),code);
 
-        redisRepository.set(ValidConstant.VALID_USER_PHONE_CODE + userDTO.getPhone(),code);//验证有效期
-        redisRepository.expire(ValidConstant.VALID_USER_PHONE_CODE + userDTO.getPhone(),120);
+        redisRepository.set(MrshopConstant.VALID_USER_PHONE_CODE + userDTO.getPhone(),code);//验证有效期
+        redisRepository.expire(MrshopConstant.VALID_USER_PHONE_CODE + userDTO.getPhone(),120);
 
         return this.setResultSuccess();
     }
@@ -87,7 +87,7 @@ public class UserServiceImpl extends BaseApiService implements UserService {
     @Override
     public Result<JSONObject> checkValidCode(String phone, String code) {
 
-        String redisValid = redisRepository.get(ValidConstant.VALID_USER_PHONE_CODE + phone);
+        String redisValid = redisRepository.get(MrshopConstant.VALID_USER_PHONE_CODE + phone);
         if(!code.equals(redisValid)){
             return this.setResultError(HTTPStatus.VALID_CODE_ERROR,"验证码输入错误");
         }

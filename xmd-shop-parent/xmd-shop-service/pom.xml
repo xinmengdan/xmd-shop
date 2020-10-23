@@ -19,6 +19,8 @@
         <module>xmd-shop-service-search-template</module>
         <module>xmd-shop-service-user</module>
         <module>xmd-shop-service-car</module>
+        <module>xmd-shop-service-order</module>
+        <module>xmd-shop-service-pay</module>
     </modules>
 
     <dependencies>
