@@ -7,13 +7,10 @@ import com.baidu.shop.entity.UserEntity;
 import com.baidu.shop.mapper.UserOauthMapper;
 import com.baidu.shop.utils.BCryptUtil;
 import com.baidu.shop.utils.JwtUtils;
-import org.apache.catalina.User;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
-import javax.swing.*;
 import java.util.List;
 
 /**

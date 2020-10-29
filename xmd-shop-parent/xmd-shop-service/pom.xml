@@ -21,6 +21,7 @@
         <module>xmd-shop-service-car</module>
         <module>xmd-shop-service-order</module>
         <module>xmd-shop-service-pay</module>
+        <module>xmd-shop-service-banner</module>
     </modules>
 
     <dependencies>

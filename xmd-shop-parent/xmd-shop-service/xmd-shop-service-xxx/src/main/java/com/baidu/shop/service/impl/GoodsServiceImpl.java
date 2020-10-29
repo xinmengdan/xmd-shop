@@ -339,5 +339,12 @@ public class GoodsServiceImpl extends BaseApiService implements GoodsService {
     }
 
 
+    @Override
+    public Result<SkuEntity> getSpuById(Long spuId) {
 
+        Example example = new Example(SkuEntity.class);
+        example.createCriteria().andEqualTo("spuId",spuId);
+        List<SkuEntity> skuEntities = skuMapper.selectByExample(example);
+        return this.setResultSuccess(skuEntities.get(0));
+    }
 }

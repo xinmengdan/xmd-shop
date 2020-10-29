@@ -21,6 +21,8 @@
         <module>xmd-shop-service-api-car</module>
         <module>xmd-shop-service-api-order</module>
         <module>xmd-shop-service-api-pay</module>
+        <module>xmd-shop-service-api-banner</module>
+        <module>xmd-shop-service-api-recommend</module>
     </modules>
 
     <dependencies>

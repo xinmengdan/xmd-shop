@@ -81,7 +81,6 @@ public class CategoryServiceImpl extends BaseApiService implements CategoryServi
 
     }
 
-
     @Transactional
     @Override
     public Result<JsonObject> deleteCategory(Integer id) {
@@ -134,7 +133,6 @@ public class CategoryServiceImpl extends BaseApiService implements CategoryServi
 
             categoryMapper.updateByPrimaryKeySelective(parentCateEntity);
         }
-
 
         categoryMapper.deleteByPrimaryKey(id);
         return this.setResultSuccess("删除成功");

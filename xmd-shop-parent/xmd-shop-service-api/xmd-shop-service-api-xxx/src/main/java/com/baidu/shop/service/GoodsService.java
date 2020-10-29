@@ -48,4 +48,8 @@ public interface GoodsService {
     @GetMapping(value = "goods/getSkuBySkuId")
     Result<SkuEntity> getSkuBySkuId(@RequestParam Long skuId);
 
+    @ApiModelProperty(value = "通过skuId查询sku信息")
+    @GetMapping(value = "goods/getSpuById")
+    Result<SkuEntity> getSpuById(Long spuId);
+
 }
