@@ -18,6 +18,8 @@ zuul:
     order-server: /order/**
     pay-server: /pay/**
     banner-server: /manage/**
+    recommend-server: /recommend/**
+    miaosha-service: /miaosha/**
 
 #  # 声明路由
 #  routes:

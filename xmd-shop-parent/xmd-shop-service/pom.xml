@@ -22,6 +22,8 @@
         <module>xmd-shop-service-order</module>
         <module>xmd-shop-service-pay</module>
         <module>xmd-shop-service-banner</module>
+        <module>xmd-shop-service-recommend</module>
+        <module>baidu-shop-service-miaosha</module>
     </modules>
 
     <dependencies>
